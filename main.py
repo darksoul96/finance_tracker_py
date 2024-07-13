@@ -1,22 +1,34 @@
-from tkinter import *
+import tkinter as tk
 from tkinter import ttk
 
 
 if __name__ == "__main__":
-    root = Tk()
-    root.geometry("600x300")
-    root.maxsize(600, 300)
-    frame = ttk.Frame(root, padding=50, width=600, height=300, borderwidth=5)
-    frame.grid(row=50, column=10)
+    # window
+    window = tk.Tk()
+    window.title("Finance Tracker in Python")
+    window.geometry("600x300")
+    window.maxsize(600, 300)
 
-    ttk.Label(frame, text="Welcome to your finance tracker!").grid(
-        column=0, row=0, padx=10, pady=10
+    # title
+    title_label = ttk.Label(
+        master=window, text="Welcome to your finance tracker!", font="Calibri 24"
     )
-    ttk.Label(frame, text="Enter expense: ").grid(column=0, row=2, padx=10, pady=10)
-    ttk.Entry(frame, validate="key").grid(column=1, row=2, padx=10, pady=10)
+    title_label.pack()
 
-    ttk.Button(frame, text="Save").grid(column=0, row=50, padx=10, pady=10)
-    ttk.Button(frame, text="Quit", command=root.destroy).grid(
-        column=5, row=50, padx=10, pady=10
+    frame = ttk.Frame(master=window)
+    expense_label = ttk.Label(master=frame, text="Enter expense: ", padding=10)
+    expense_value = ttk.Entry(master=frame, width=50)
+
+    save_button = ttk.Button(master=frame, text="Save", padding=5)
+    quit_button = ttk.Button(
+        master=frame, text="Quit", command=window.destroy, padding=5
     )
-    root.mainloop()
+
+    expense_label.pack()
+    expense_value.pack(pady=(20))
+    save_button.pack(side=tk.LEFT, pady=20, padx=20)
+    quit_button.pack(side=tk.RIGHT, padx=20)
+    frame.pack()
+
+    # run window
+    window.mainloop()
