@@ -8,14 +8,16 @@ import os
 filename = "data.csv"
 
 # Define the headers and data to be written
-headers = ["Name", "Value"]
+headers = ["Name", "Value", "Category"]
 
 
-def SaveExpense(name: str, value: int):
+def SaveExpense(name: str, value: int, category: str):
+    if category == "":
+        category = "Other"
     try:
         with open(filename, "a", newline="") as file:
             writer = csv.writer(file)
-            writer.writerow([name, value])
+            writer.writerow([name, value, category])
             output_string.set("Expense added succesfully!")
             output_label.configure(foreground="green")
     except any:
@@ -25,9 +27,10 @@ def SaveExpense(name: str, value: int):
 # Method called after submitting
 def ValidateExpenseInput():
     try:
-        expense_string_value = str(expense_name_entry.get())
-        expense_int_value = int(expense_value_entry.get())
-        SaveExpense(expense_string_value, expense_int_value)
+        expense_name_str = str(expense_name_entry.get())
+        expense_value_int = int(expense_value_entry.get())
+        expense_category_str = str(expense_category_combobox.get())
+        SaveExpense(expense_name_str, expense_value_int, expense_category_str)
     except ValueError:
         output_string.set("Add a valid name and/or value")
         output_label.configure(foreground="red")
@@ -49,8 +52,8 @@ if __name__ == "__main__":
     window = ttk.Window(themename="darkly")
 
     window.title("Finance Tracker in Python")
-    window.geometry("600x400")
-    window.maxsize(600, 400)
+    window.geometry("600x500")
+    window.maxsize(600, 500)
 
     # title
     title_label = ttk.Label(
@@ -69,11 +72,18 @@ if __name__ == "__main__":
     )
     expense_value_entry = ttk.Entry(master=frame, width=50)
 
+    expense_category_label = ttk.Label(
+        master=frame, text="Select expense category", padding=5
+    )
+    expense_category_combobox = ttk.Combobox(
+        master=frame, values=["Auto", "Alquiler", "Comida", "Gatos"]
+    )
+
     save_button = ttk.Button(
-        master=frame, text="Save", padding=5, command=ValidateExpenseInput
+        master=frame, text="Save", padding=10, command=ValidateExpenseInput
     )
     quit_button = ttk.Button(
-        master=frame, text="Quit", command=window.destroy, padding=5
+        master=frame, text="Quit", command=window.destroy, padding=10
     )
 
     # Add labels, input and buttons to the window
@@ -83,6 +93,8 @@ if __name__ == "__main__":
     expense_value_label.pack()
     expense_value_entry.pack(pady=(20))
 
+    expense_category_label.pack()
+    expense_category_combobox.pack(pady=15)
     save_button.pack(side=ttk.LEFT, padx=20)
     quit_button.pack(side=ttk.RIGHT, padx=20)
     frame.pack()
