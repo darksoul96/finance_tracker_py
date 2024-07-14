@@ -1,14 +1,17 @@
 import tkinter as tk
-
-# from tkinter import ttk
 import ttkbootstrap as ttk
+import ttkbootstrap.constants as constants
 
 
 def SaveExpense():
-    if isinstance(expense_int_value.get(), int):
+    try:
+        # expense_int_value = int(expense_entry.get())
         output_string.set("Expense added succesfully!")
-    else:
+    except ValueError:
         output_string.set("Add a valid number")
+    finally:
+        expense_entry.delete(0, constants.END)
+        expense_entry.focus()
 
 
 if __name__ == "__main__":
@@ -27,11 +30,10 @@ if __name__ == "__main__":
 
     frame = ttk.Frame(master=window)
     expense_label = ttk.Label(master=frame, text="Enter expense: ", padding=10)
-    expense_int_value = tk.IntVar()
-    expense_entry = ttk.Entry(master=frame, width=50, textvariable=expense_int_value)
+    # expense_int_value = tk.IntVar()
+    expense_entry = ttk.Entry(master=frame, width=50)
 
     save_button = ttk.Button(master=frame, text="Save", padding=5, command=SaveExpense)
-
     quit_button = ttk.Button(
         master=frame, text="Quit", command=window.destroy, padding=5
     )
@@ -46,5 +48,6 @@ if __name__ == "__main__":
     output_label = ttk.Label(master=window, textvariable=output_string)
     output_label.pack()
 
+    expense_entry.focus()
     # run window
     window.mainloop()
