@@ -1,27 +1,50 @@
 import ttkbootstrap as ttk
 import ttkbootstrap.constants as constants
+import csv
+import os
+
+
+# Define the filename
+filename = "data.csv"
+
+# Define the headers and data to be written
+headers = ["Name", "Value"]
+
+
+class Expense:
+    name: str
+    value: float
+
+    def __init__(self, name, value):
+        self.name = name
+        self.value = value
 
 
 # Method called after submitting
 def SaveExpense():
     try:
-        expense_int_value = int(expense_entry.get())
+        expense_string_value = str(expense_name_entry)
+        expense_int_value = int(expense_value_entry.get())
+        new_expense = Expense(expense_string_value, expense_int_value)
         output_string.set("Expense added succesfully!")
+        output_label.configure(foreground="green")
+
     except ValueError:
-        output_string.set("Add a valid number")
+        output_string.set("Add a valid name and/or value")
+        output_label.configure(foreground="red")
     finally:
-        expense_entry.delete(0, constants.END)
-        expense_entry.focus()
+        expense_name_entry.delete(0, constants.END)
+        expense_value_entry.delete(0, constants.END)
+        expense_name_entry.focus()
 
 
 if __name__ == "__main__":
     # window
-    # window = tk.Tk()
     window = ttk.Window(themename="darkly")
 
     window.title("Finance Tracker in Python")
-    window.geometry("600x300")
-    window.maxsize(600, 300)
+    window.geometry("600x400")
+    window.maxsize(600, 400)
 
     # title
     title_label = ttk.Label(
@@ -32,8 +55,13 @@ if __name__ == "__main__":
     # Main input fram
     frame = ttk.Frame(master=window)
 
-    expense_label = ttk.Label(master=frame, text="Enter expense: ", padding=10)
-    expense_entry = ttk.Entry(master=frame, width=50)
+    expense_name_label = ttk.Label(master=frame, text="Enter expense name: ", padding=5)
+    expense_name_entry = ttk.Entry(master=frame, width=50)
+
+    expense_value_label = ttk.Label(
+        master=frame, text="Enter expense value: ", padding=5
+    )
+    expense_value_entry = ttk.Entry(master=frame, width=50)
 
     save_button = ttk.Button(master=frame, text="Save", padding=5, command=SaveExpense)
     quit_button = ttk.Button(
@@ -41,19 +69,23 @@ if __name__ == "__main__":
     )
 
     # Add labels, input and buttons to the window
-    expense_label.pack()
-    expense_entry.pack(pady=(20))
-    save_button.pack(side=ttk.LEFT, pady=30, padx=30)
+    expense_name_label.pack()
+    expense_name_entry.pack(pady=(20))
+
+    expense_value_label.pack()
+    expense_value_entry.pack(pady=(20))
+
+    save_button.pack(side=ttk.LEFT, padx=20)
     quit_button.pack(side=ttk.RIGHT, padx=20)
     frame.pack()
 
     # This label shows whether the input was correct or not
     output_string = ttk.StringVar()
-    output_label = ttk.Label(master=window, textvariable=output_string)
+    output_label = ttk.Label(master=window, textvariable=output_string, padding=15)
     output_label.pack()
 
     # This line makes sure that the cursor starts at the input
-    expense_entry.focus()
+    expense_name_entry.focus()
 
     # run window
     window.mainloop()
