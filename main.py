@@ -11,24 +11,23 @@ filename = "data.csv"
 headers = ["Name", "Value"]
 
 
-class Expense:
-    name: str
-    value: float
-
-    def __init__(self, name, value):
-        self.name = name
-        self.value = value
+def SaveExpense(name: str, value: int):
+    try:
+        with open(filename, "a", newline="") as file:
+            writer = csv.writer(file)
+            writer.writerow([name, value])
+            output_string.set("Expense added succesfully!")
+            output_label.configure(foreground="green")
+    except any:
+        output_string.set("Value could not be saved")
 
 
 # Method called after submitting
-def SaveExpense():
+def ValidateExpenseInput():
     try:
-        expense_string_value = str(expense_name_entry)
+        expense_string_value = str(expense_name_entry.get())
         expense_int_value = int(expense_value_entry.get())
-        new_expense = Expense(expense_string_value, expense_int_value)
-        output_string.set("Expense added succesfully!")
-        output_label.configure(foreground="green")
-
+        SaveExpense(expense_string_value, expense_int_value)
     except ValueError:
         output_string.set("Add a valid name and/or value")
         output_label.configure(foreground="red")
@@ -39,6 +38,13 @@ def SaveExpense():
 
 
 if __name__ == "__main__":
+    file_exists = os.path.isfile(filename)
+
+    if not file_exists:
+        with open(filename, "w", newline="") as file:
+            writer = csv.writer(file)
+            writer.writerow(headers)
+
     # window
     window = ttk.Window(themename="darkly")
 
@@ -63,7 +69,9 @@ if __name__ == "__main__":
     )
     expense_value_entry = ttk.Entry(master=frame, width=50)
 
-    save_button = ttk.Button(master=frame, text="Save", padding=5, command=SaveExpense)
+    save_button = ttk.Button(
+        master=frame, text="Save", padding=5, command=ValidateExpenseInput
+    )
     quit_button = ttk.Button(
         master=frame, text="Quit", command=window.destroy, padding=5
     )
