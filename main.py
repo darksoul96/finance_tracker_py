@@ -2,7 +2,8 @@ import ttkbootstrap as ttk
 import ttkbootstrap.constants as constants
 import csv
 import os
-
+import matplotlib.pyplot as plt
+import pandas
 
 # Define the filename
 filename = "data.csv"
@@ -38,6 +39,22 @@ def ValidateExpenseInput():
         expense_name_entry.delete(0, constants.END)
         expense_value_entry.delete(0, constants.END)
         expense_name_entry.focus()
+
+
+def GenerateGraph():
+    print("generate graph")
+    data = pandas.read_csv(r"data.csv")
+    data.head()
+    data_frame = pandas.DataFrame(data)
+
+    print(data_frame)
+    name = data_frame["Name"].head(12)
+    value = data_frame["Value"].head(12)
+    category = data_frame["Category"].head(12)
+
+    plt.bar(x=category, height=value)
+
+    plt.show()
 
 
 if __name__ == "__main__":
@@ -86,6 +103,10 @@ if __name__ == "__main__":
         master=frame, text="Quit", command=window.destroy, padding=10
     )
 
+    generate_graph_button = ttk.Button(
+        master=frame, text="Generate Graph", command=GenerateGraph, padding=10
+    )
+
     # Add labels, input and buttons to the window
     expense_name_label.pack()
     expense_name_entry.pack(pady=(20))
@@ -97,6 +118,7 @@ if __name__ == "__main__":
     expense_category_combobox.pack(pady=15)
     save_button.pack(side=ttk.LEFT, padx=20)
     quit_button.pack(side=ttk.RIGHT, padx=20)
+    generate_graph_button.pack()
     frame.pack()
 
     # This label shows whether the input was correct or not
